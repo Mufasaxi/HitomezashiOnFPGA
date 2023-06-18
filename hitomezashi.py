@@ -20,11 +20,24 @@ def divide(num1, num2):
     return result
 
 
-def multiply(n1, n2):
+def multiply(num1, num2):
     result = 0
-    for i in range(n2):
-        result += n1
+
+    for i in range(num2):
+        result += num1
+
     return result
+
+
+def pixel(surface, colour, pos):
+    surface.set_at(pos, colour)
+
+
+def rectangle(surface, colour, x, y, width, height):
+    for i in range(x, x + width):
+        for j in range(y, y + height):
+            pixel(surface, colour, (i, j))
+            print('in rect')
 
 
 while running:
@@ -52,9 +65,8 @@ while running:
             start_pos = 1
 
         for x in range(start_pos, SIZE, 2):
-            pygame.draw.rect(win, (162, 205, 72),
-                             [multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))),
-                              (divide(WIDTH, SIZE)), 3])
+            rectangle(win, (162, 205, 72), multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))),
+                      (divide(WIDTH, SIZE)), 3)
 
     # drawing the vertical lines
     for x in range(SIZE):
@@ -64,8 +76,7 @@ while running:
             start_pos = 1
 
         for y in range(start_pos, SIZE, 2):
-            pygame.draw.rect(win, (162, 205, 72),
-                             [multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))), 3,
-                              (divide(WIDTH, SIZE))])
+            rectangle(win, (162, 205, 72), multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))), 3,
+                      (divide(WIDTH, SIZE)))
 
     pygame.display.update()
