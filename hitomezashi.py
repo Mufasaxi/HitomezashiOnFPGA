@@ -4,6 +4,17 @@ import random
 WIDTH = 1280
 HEIGHT = 720
 SIZE = 40
+rowOptions = [[0,0,1,0,0,0,0,0,1,0,1,0,0,1,1,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,1,1,0], 
+              [0,0,0,0,0,1,0,0,1,1,0,0,0,1,1,0,1,0,0,0,0,0,1,1,0,1,0,0,0,0,1,1,1,0,0,0,1,1,0,1], 
+              [1,1,0,1,0,1,0,0,0,0,1,1,1,1,0,1,0,0,1,1,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,1,0,1,1,0]]
+
+rows = rowOptions[0]
+
+columnOptions = [[1,0,1,1,0,1,0,0,0,0,1,1,1,1,1,1,0,1,0,0,1,0,0,1,0,1,1,0,0,1,0,0,0,0,0,1,0,0,0,0], 
+                 [0,0,1,1,0,1,0,0,0,1,1,1,1,0,0,0,1,1,0,0,1,1,0,1,1,0,0,1,0,0,0,1,1,0,1,0,0,0,0,0], 
+                 [1,1,0,1,0,0,1,1,0,0,0,1,0,1,0,1,1,0,1,1,0,1,1,1,1,0,1,1,0,0,1,1,0,1,0,1,0,0,1,1]]
+
+columns = columnOptions[0]
 
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 running = True
@@ -37,25 +48,41 @@ def rectangle(surface, colour, x, y, width, height):
     for i in range(x, x + width):
         for j in range(y, y + height):
             pixel(surface, colour, (i, j))
-            print('in rect')
+            pygame.display.update()
+            #print('in rect')
+
+
+            
+""" def randBitStream(start_state):
+    state = start_state
+    output = []
+
+    for i in range(40):
+        output.append(state & 1)
+        bit = (state ^ (state >> 1)) & 1
+        state = (state >> 1) | (bit << 5)
+        
+    return output """
 
 
 while running:
     clock.tick(1)
+    BITCHOICE = pygame.USEREVENT
+    pygame.time.set_timer(BITCHOICE, 1000)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        # creating 2 random bit streams for the rows and columns
+        elif event.type == BITCHOICE:
+            print("choice")
+            for i in range(3):
+                for j in range(3):
+                    rows = rowOptions[i]
+                    columns = columnOptions[j]
 
     win.fill((135, 80, 148))
-
-    rows = []
-    columns = []
-
-    # creating 2 random bit streams for the rows and columns
-    for i in range(SIZE):
-        rows.append(random.randint(0, 1))
-        columns.append(random.randint(0, 1))
+    
 
     # drawing the horizontal lines
     for y in range(SIZE):
@@ -79,4 +106,3 @@ while running:
             rectangle(win, (162, 205, 72), multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))), 3,
                       (divide(WIDTH, SIZE)))
 
-    pygame.display.update()
