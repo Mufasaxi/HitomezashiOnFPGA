@@ -1,0 +1,85 @@
+//DIVISION
+function integer divide_numbers;
+  input integer dividend;
+  input integer divisor;
+  integer quotient;
+
+  begin
+
+    //avoids division by 0
+    if (divisor == 0) begin
+      //$display("Error: Division bi_y zero!"); //most likely wont work
+      return 0;
+    end
+
+    quotient = 0;
+
+    //determines sign of quotient
+    if (dividend < 0) begin
+      dividend = -dividend;
+      quotient = -quotient;
+    end
+
+    if (divisor < 0) begin
+      divisor = -divisor;
+      quotient = -quotient;
+    end
+
+    //divides
+    while (dividend >= divisor) begin
+      dividend = dividend - divisor;
+      quotient = quotient + 1;
+    end
+
+    return quotient;
+  end
+
+endfunction
+
+
+//MULTIPLICATION
+function integer multiply_numbers;
+  input integer multiplicand;
+  input integer multiplier;
+  integer product;
+
+  begin
+    product = 0;
+    //determines sign of product
+    if (multiplier < 0) begin
+      multiplier = -multiplier;
+      multiplicand = -multiplicand;
+    end
+
+    //multiplies
+    while (multiplier > 0) begin
+      product = product + multiplicand;
+      multiplier = multiplier - 1;
+    end
+
+    return product;
+  end
+
+endfunction
+
+
+//RECTANGLE
+function reg [7:0][1279:0][719:0] rectangle;
+  input integer i_x;
+  input integer i_y;
+  input integer width;
+  input integer height;
+
+  begin
+    if (i_x >= 0 & i_y >= 0 & width > 0 & height > 0 & (i_x + width) <= 1280 & (i_y + height) <= 720) begin
+      for (int i = i_x; i < i_x + width; i = i + 1) begin
+        for (int j = i_y; j < i_y + height; j = j + 1) begin
+          //turn on red
+        end
+      end
+    //here should be an else block that lets all other pixels outside of the rectangle be black
+    end
+
+  end
+
+endfunction
