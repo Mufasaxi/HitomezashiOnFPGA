@@ -1,0 +1,30 @@
+// stitch start values: MSB first, so we can write left to right
+logic [0:39] v_start;  // 40 vertical lines
+logic [0:29] h_start;  // 30 horizontal lines
+
+initial begin  // random start values
+    v_start = 40'b01100_00101_00110_10011_10101_10101_01111_01101;
+    h_start = 30'b10111_01001_00001_10100_00111_01010;
+end
+
+// paint stitch pattern with 16x16 pixel grid
+logic stitch;
+logic v_line, v_on;
+logic h_line, h_on;
+
+always_comb begin
+    v_line = (sx[3:0] == 4'b0000);
+    h_line = (sy[3:0] == 4'b0000);
+    v_on = sy[4] ^ v_start[sx[9:4]];
+    h_on = sx[4] ^ h_start[sy[8:4]];
+    stitch = (v_line && v_on) || (h_line && h_on);
+end
+
+// paint colour: yellow lines, blue background
+logic [3:0] paint_r, paint_g, paint_b;
+
+always_comb begin
+    paint_r = (stitch) ? 4'hF : 4'h1;
+    paint_g = (stitch) ? 4'hC : 4'h3;
+    paint_b = (stitch) ? 4'h0 : 4'h7;
+end

@@ -1,0 +1,60 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company:
+// Engineer:
+//
+// Create Date: 04/02/2021 10:00:46 PM
+// Design Name:
+// Module Name: FireEffect
+// Project Name:
+// Target Devices:
+// Tool Versions:
+// Description:
+//
+// Dependencies:
+//
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+//
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module FireEffect(
+    input wire signed [15:0] i_x,
+    input wire signed [15:0] i_y,
+    input wire pix_clk,
+    input wire framestart,
+    output reg [7:0] o_red,
+    output reg [7:0] o_green,
+    output reg [7:0] o_blue
+    );
+
+
+
+reg [15:0] lp;
+
+initial begin
+    o_red = 10;
+    o_green = 10;
+    o_blue = 10;
+end
+
+always @ (posedge pix_clk) begin
+
+    if ((i_y==-1) && (i_x==0)) begin
+        lp <= 0;
+    end else begin
+        if ((i_x==-1)) begin
+            lp <= lp + 23;
+        end
+        if ((i_x >= lp[15:4]) && (i_x <= lp[15:4]+8)) begin
+            o_green <= 255;
+        end else begin
+            o_green <= 0;
+        end
+    end
+end
+
+endmodule
+

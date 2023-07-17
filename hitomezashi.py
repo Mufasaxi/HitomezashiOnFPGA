@@ -1,21 +1,15 @@
+#!/usr/bin/env python3
 import pygame
 import random
 
-
 WIDTH = 1280
 HEIGHT = 720
-SIZE = 40
-rowOptions = [[0,0,1,0,0,0,0,0,1,0,1,0,0,1,1,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,1,1,0], 
-              [0,0,0,0,0,1,0,0,1,1,0,0,0,1,1,0,1,0,0,0,0,0,1,1,0,1,0,0,0,0,1,1,1,0,0,0,1,1,0,1], 
-              [1,1,0,1,0,1,0,0,0,0,1,1,1,1,0,1,0,0,1,1,1,0,0,0,0,1,0,1,1,1,1,0,1,0,1,1,0,1,1,0]]
+SIZE = 32
+rows = [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1,
+        1, 1, 0]
 
-rows = rowOptions[0]
-
-columnOptions = [[1,0,1,1,0,1,0,0,0,0,1,1,1,1,1,1,0,1,0,0,1,0,0,1,0,1,1,0,0,1,0,0,0,0,0,1,0,0,0,0], 
-                 [0,0,1,1,0,1,0,0,0,1,1,1,1,0,0,0,1,1,0,0,1,1,0,1,1,0,0,1,0,0,0,1,1,0,1,0,0,0,0,0], 
-                 [1,1,0,1,0,0,1,1,0,0,0,1,0,1,0,1,1,0,1,1,0,1,1,1,1,0,1,1,0,0,1,1,0,1,0,1,0,0,1,1]]
-
-columns = columnOptions[0]
+columns = [1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1,
+           0, 0, 0, 0]
 
 count = 0
 
@@ -51,11 +45,10 @@ def rectangle(surface, colour, x, y, width, height):
     for i in range(x, x + width):
         for j in range(y, y + height):
             pixel(surface, colour, (i, j))
-            pygame.display.update()
-            #print('in rect')
+            # pygame.display.update()
+            # print('in rect')
 
 
-            
 """ def randBitStream(start_state):
     state = start_state
     output = []
@@ -64,84 +57,50 @@ def rectangle(surface, colour, x, y, width, height):
         output.append(state & 1)
         bit = (state ^ (state >> 1)) & 1
         state = (state >> 1) | (bit << 5)
-        
+
     return output """
 
+frame = 0
 
 while running:
-    clock.tick(1)
-    BITCHOICE = pygame.USEREVENT
-    pygame.time.set_timer(BITCHOICE, 1000)
+    clock.tick(6000)
+    frame += 1
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         # creating 2 random bit streams for the rows and columns
-        # elif event.type == BITCHOICE:
-        #     print("choice")
-        #     for i in range(3):
-        #         for j in range(3):
-        #             rows = rowOptions[i]
-        #             columns = columnOptions[j]
-
-    # choosing combination
-    if count == 0:
-        rows = rowOptions[0]
-        columns = columnOptions[0]
-    elif count == 1:
-        rows = rowOptions[0]
-        columns = columnOptions[1]
-    elif count == 2:
-        rows = rowOptions[0]
-        columns = columnOptions[2]
-    elif count == 3:
-        rows = rowOptions[1]
-        columns = columnOptions[0]
-    elif count == 4:
-        rows = rowOptions[1]
-        columns = columnOptions[1]
-    elif count == 5:
-        rows = rowOptions[1]
-        columns = columnOptions[2]
-    elif count == 6:
-        rows = rowOptions[2]
-        columns = columnOptions[0]
-    elif count == 7:
-        rows = rowOptions[2]
-        columns = columnOptions[1]
-    elif count == 8:
-        rows = rowOptions[2]
-        columns = columnOptions[2]
-
 
     win.fill((135, 80, 148))
-    
 
     # drawing the horizontal lines
-    for y in range(SIZE):
-        if rows[y] == 0:
+    for y in range(720):
+        yCell = y // 32
+        if rows[yCell] == 0:
             start_pos = 0
         else:
             start_pos = 1
 
-        for x in range(start_pos, SIZE, 2):
-            rectangle(win, (162, 205, 72), multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))),
-                      (divide(WIDTH, SIZE)), 3)
+        for x in range(0, 1280):
+            if (y % 32) >= 0 and (y % 32) <= 3 and frame > yCell:
+                xCell = x // 32
+                if ((xCell % 2) ^ start_pos) > 0 and x < frame:# * 10:
+                    pixel(win, (162, 205, 72), (x, y))
 
     # drawing the vertical lines
-    for x in range(SIZE):
-        if columns[x] == 0:
+    for x in range(1280):
+        xCell = x // 32
+        if columns[xCell] == 0:
             start_pos = 0
         else:
             start_pos = 1
 
-        for y in range(start_pos, SIZE, 2):
-            rectangle(win, (162, 205, 72), multiply(x, (divide(WIDTH, SIZE))), multiply(y, (divide(WIDTH, SIZE))), 3,
-                      (divide(WIDTH, SIZE)))
+        for y in range(720):
+            if(x % 32) >= 0 and (x % 32) <=3 and frame > xCell:
+                yCell = y // 32
+                if ((yCell % 2) ^ start_pos) > 0 and y < frame :#* 10:
+                    pixel(win, (162, 205, 72), (x, y))
 
-    if count > 8 :
-        count = 0
-    else :
-        count += 1
 
-    # pygame.display.update()
+
+    pygame.display.update()
